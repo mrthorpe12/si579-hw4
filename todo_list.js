@@ -1,6 +1,7 @@
 const taskList = document.getElementById('task_list');
 const addButton = document.getElementById('add_task');
 const taskDescriptionInput = document.getElementById('task_description_input');
+const listItems = document.getElementsByTagName('li');
 
 addButton.addEventListener('click', handler, false);
 taskDescriptionInput.addEventListener('keydown', (e) => {
@@ -10,20 +11,28 @@ taskDescriptionInput.addEventListener('keydown', (e) => {
 }, false);
 
 /**
- * Helper function that handles addButton events.
+ * Helper function that handles addButton events.  Contains for loop that allows user to remove items from list.
  */
 function handler() {
     var dateInput = document.getElementById('duedate_input');
     var timeInput = document.getElementById('duetime_input');
-
-    console.log(dateInput);
-    console.log(timeInput);
 
     var taskDescription = document.getElementById('task_description_input').value;
     var taskTime = dateAndTimeToTimestamp(dateInput, timeInput);
     // console.log(typeof taskTime);
     addTask(taskDescription, taskTime);
     taskDescriptionInput.value = '';
+
+    for (var index = 0; index < listItems.length; index++) {
+        var item = listItems[index];
+        console.log(item);
+        var removeButton = item.querySelector('button');
+
+        removeButton.addEventListener('click', (e) => {
+            console.log('Hurray!  You found the button!');
+            item.remove();
+        });
+    }
 }
 
 /**
