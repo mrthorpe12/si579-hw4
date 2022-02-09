@@ -1,20 +1,81 @@
 const taskList = document.getElementById('task_list');
 const addButton = document.getElementById('add_task');
+const taskDescriptionInput = document.getElementById('task_description_input');
 
-addButton.addEventListener('click', (e) => {
-    var description = document.getElementById('task_description_input').value;
-    var time = document.getElementById('duetime_input').value;
-    addTask(description, time);
-    // console.log(taskList);
-});
+addButton.addEventListener('click', handler, false);
+taskDescriptionInput.addEventListener('keydown', (e) => {
+    if (e.key == "Enter") {
+        handler();
+    }
+}, false);
 
+/**
+ * Helper function that handles addButton events.
+ */
+function handler() {
+    var dateInput = document.getElementById('duedate_input');
+    var timeInput = document.getElementById('duetime_input');
+
+    console.log(dateInput);
+    console.log(timeInput);
+
+    var taskDescription = document.getElementById('task_description_input').value;
+    var taskTime = dateAndTimeToTimestamp(dateInput, timeInput);
+    // console.log(typeof taskTime);
+    addTask(taskDescription, taskTime);
+    taskDescriptionInput.value = '';
+}
+
+/**
+ * Function that accepts user-specified date and time and returns single value (in milliseconds).
+ * @param  {HTMLElement} dateInputElement
+ * Date input element
+ * @param  {HTMLElement} timeInputElement
+ * Time input element
+ */
+function dateAndTimeToTimestamp(dateInputElement, timeInputElement) {
+    var dueDate = dateInputElement.valueAsNumber; // Returns the timestamp at midnight for the given date
+    var dueTime = timeInputElement.valueAsNumber; // Returns the number of milliseconds from midnight to the time  
+
+    if (dueDate && dueTime) { // The user specified both a due date & due time
+        //Add the timezone offset to account for the fact that timestamps are specified by UTC
+        const timezoneOffset = (new Date()).getTimezoneOffset() * 60 * 1000;
+        return dueDate + dueTime + timezoneOffset;
+    } else {
+        // if the user did not specify both a due date and due time, return false
+        return false;
+    }
+}
+
+/**
+ * Function that accepts description of given task and due time for said task.  Relevant information is appended to HTML list element.
+ * @param  {string} description
+ * Description of given task
+ * @param  {number} dueTime
+ * Date and time in millisecond format.  Parameter is optional.
+ */
 function addTask(description, dueTime) {
-    var spanElement = document.createElement('span.due');
     var listItem = document.createElement('li');
+    var span = document.createElement('span');
+    var btn = document.createElement('button');
 
-    spanElement.textContent = dueTime
-    var content = document.createTextNode(description + spanElement);
-    console.log(content);
-    listItem.appendChild(content);
+    btn.innerHTML = "Done";
+    btn.className = "btn btn-sm btn-outline-danger done";
+    span.className = "due";
+
+    if (dueTime) {
+        dueTime = new Date(dueTime);
+        span.textContent = ` due ${dueTime.toLocaleDateString('en-US')} ${dueTime.toLocaleTimeString('en-US')} `;
+    }
+
+
+    listItem.append(description);
+    if (dueTime) {
+        listItem.append(span);
+    }
+    listItem.append(btn);
+
+
     taskList.appendChild(listItem);
+
 }
