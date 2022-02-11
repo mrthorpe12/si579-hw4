@@ -24,13 +24,13 @@ function handler() {
     taskDescriptionInput.value = '';
 
     for (var index = 0; index < listItems.length; index++) {
-        var item = listItems[index];
-        console.log(item);
+        let item = listItems[index];
+        console.log(`Item: ${item.innerHTML} Item index: ${index}`);
         var removeButton = item.querySelector('button');
 
         removeButton.addEventListener('click', (e) => {
             console.log('Hurray!  You found the button!');
-            item.remove();
+            item.parentElement.removeChild(item);
         });
     }
 }
