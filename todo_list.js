@@ -16,7 +16,7 @@ taskDescriptionInput.addEventListener('keydown', (e) => {
 function handler() {
     var dateInput = document.getElementById('duedate_input');
     var timeInput = document.getElementById('duetime_input');
-
+    
     var taskDescription = document.getElementById('task_description_input').value;
     var taskTime = dateAndTimeToTimestamp(dateInput, timeInput);
     // console.log(typeof taskTime);
